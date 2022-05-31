@@ -7,7 +7,7 @@ const data = [
     { id: 6, customer: 'Customer6', value1: 287, value2: 40 },
 ]
 
-const dataset = [1, 4, 6, 7, 8, 9, 10, 11, 12, 5, 6, 7]
+const dataset = [1, 4, 20, 7, 8, 90, 10, 11, 12, 5, 6, 7]
 
 
 
@@ -58,24 +58,24 @@ var margin = { top: 20, right: 0, bottom: 0, left: 0 },
     height = h - margin.top - margin.bottom;
 
 var x = d3.scale.linear()
-    .domain([0, d3.max(dataArea, function (d) { return d.x; })])
+    .domain([0, d3.max(dataArea, (d) => d.x)])
     .range([0, width]);
 
 var y = d3.scale.linear()
-    .domain([0, d3.max(dataArea, function (d) { return d.y; })])
+    .domain([0, d3.max(dataArea, (d) => d.y)])
     .range([height, 0]);
 
 
 var area = d3.svg.area()
-    .x(function (d) { return x(d.x); })
+    .x((d) => x(d.x))
     .y0(height)
-    .y1(function (d) { return y(d.y); })
+    .y1((d) => y(d.y))
     .interpolate('basis')
 
 var area2 = d3.svg.area()
-    .x(function (d) { return x(d.x); })
+    .x((d) => x(d.x))
     .y0(height)
-    .y1(function (d) { return y(d.y); })
+    .y1((d) => y(d.y))
     .interpolate('basis')
 
 
@@ -149,7 +149,7 @@ var margin = { top: 30, right: 120, bottom: 30, left: 50 },
     tooltip = { width: 100, height: 100, x: 10, y: -30 };
 
 var parseDate = d3.time.format("%m/%e/%Y").parse,
-    bisectDate = d3.bisector(function (d) { return d.date; }).left,
+    bisectDate = d3.bisector(d => d.month).left,
     formatValue = d3.format(","),
     dateFormatter = d3.time.format("%m/%d/%y");
 
@@ -170,8 +170,8 @@ var yAxis = d3.svg.axis()
     .tickFormat(d3.format("s"))
 
 var line = d3.svg.line()
-    .x(function (d) { return x(d.month); })
-    .y(function (d) { return y(d.sales); });
+    .x((d) => x(d.month))
+    .y((d) => y(d.sales));
 
 var lineSvg = d3.select("#line-chart")
     .attr("width", width + margin.left + margin.right)
@@ -180,7 +180,7 @@ var lineSvg = d3.select("#line-chart")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 x.domain([monthlySales[0].month, monthlySales[monthlySales.length - 1].month]);
-y.domain(d3.extent(monthlySales, function (d) { return d.sales; }));
+y.domain(d3.extent(monthlySales, (d) => d.sales));
 
 lineSvg.append("g")
     .attr("class", "x axis")
@@ -226,7 +226,7 @@ focus.append("rect")
     .attr("x", 10)
     .attr("y", -22)
     .attr("rx", 4)
-    .attr("ry", 4);
+    .attr("ry", 4)
 
 focus.append("text")
     .attr("class", "tooltip-date")
@@ -237,8 +237,8 @@ lineSvg.append("rect")
     .attr("class", "overlay")
     .attr("width", width)
     .attr("height", height)
-    .on("mouseover", function () { focus.style("display", null); })
-    .on("mouseout", function () { focus.style("display", "none"); })
+    .on("mouseover", () => focus.style("display", null))
+    .on("mouseout", () => focus.style("display", "none"))
     .on("mousemove", mousemove);
 
 function mousemove() {
@@ -250,6 +250,15 @@ function mousemove() {
 
     focus.attr("transform", "translate(" + x(d.month) + "," + y(d.sales) + ")");
     focus.select(".tooltip-date").text(d.sales);
+
+    // var p2 = x.invert(d3.mouse(this)[0]),
+    //     i = bisectDate(monthlySales2, p2, 1),
+    //     d0 = monthlySales2[i - 1],
+    //     d1 = monthlySales2[i],
+    //     c = p2 - d0.month > d1.month - p2 ? d1 : d0;
+
+    // focus.attr("transform", "translate(" + x(c.month) + "," + y(c.sales) + ")");
+    // focus.select(".tooltip-date").text(c.sales);
 }
 
 
@@ -267,6 +276,23 @@ var donutSvg = d3.select('#donut-chart')
     .attr('width', 350)
     .attr('height', 400)
 
+var donut_tooltip_focus = donutSvg
+    .append('g')
+    .attr('class', 'donut-tooltip-focus')
+    .style('display', 'none')
+
+donut_tooltip_focus
+    .append('rect')
+    .attr('height', 40)
+    .attr('width', 100)
+    .attr('class', 'donut-tooltip')
+
+donut_tooltip_focus
+    .append('text')
+    .attr('class', 'donut-tooltip-text')
+    .attr('x', 15)
+    .attr('y', 25)
+
 var group = donutSvg
     .append('g')
     .attr('transform', 'translate(200,200)')
@@ -283,11 +309,33 @@ var arcs = group.selectAll('.arc')
     .enter()
     .append('g')
     .attr('class', 'arc')
+    .on("mouseover", function (d) {
+        d3.select(".donut-tooltip")
+            .select(".donut-tooltip-text")
+            .text(d.value);
+        d3.select(".donut-tooltip-focus").style("display", 'block');
+
+        console.log(d3.mouse(this));
+
+         donut_tooltip_focus.attr("transform", "translate(" + 100 + "," + 200 + ")");
+        // donut_tooltip_focus
+        //     .attr("x", (d3.mouse(this)[0]))
+        //     .attr("y", (d3.mouse(this)[1]))
+
+        donut_tooltip_focus.select('.donut-tooltip-text').text('Yuzde :' + d.data)
+
+    })
+    .on("mouseout", function () {
+        d3.select(".donut-tooltip-focus").style("display", 'none');
+    });
+
+
 
 arcs.append('path')
     .attr('d', arc)
     .attr('fill', d => color(d.data))
 
-arcs.append('text')
-    .attr('transform', d => 'translate(' + arc.centroid(d) + ')')
-    .text(d => d.data)
+// arcs.append('text')
+//     .attr('transform', d => 'translate(' + arc.centroid(d) + ')')
+//     .text(d => d.data)
+

@@ -1,77 +1,85 @@
 body {
-    background-color: #1c1e2f;
-    color: white;
+	background-color: #1c1e2f;
+	color: white;
 }
 
 .container {
-    width: 100%;
+	width: 100%;
 }
 .box {
-    border-radius: 20px;
-    height: 130px;
-    background-color: red;
+	border-radius: 20px;
+	height: 130px;
+	background-color: red;
 }
 .box2 {
-    border-radius: 20px;
-    margin-top: 30px;
-    height: 500px;
-    background-color: aqua;
+	border-radius: 20px;
+	margin-top: 30px;
+	height: 500px;
+	background-color: aqua;
 }
 
 .mid-cart {
-    background-color: #222437;
-}
-
-
-
-.axis path, .axis line {
-  fill: none;
-  stroke: white;
-  shape-rendering: crispEdges;
-}
-
-.area { 
-    fill: #eab009;
-}
-
-.area2 { 
-    fill: #ecbdca;
-    stroke: #fe3366;
-    stroke-width: .2em;
-}
-
-.stacked-area {
-    opacity: 0.5;
+	background-color: #222437;
 }
 
 .axis path,
 .axis line {
-    fill: none;
-    stroke: white;
-    shape-rendering: crispEdges;
+	fill: none;
+	stroke: white;
+	shape-rendering: crispEdges;
+}
+
+.area {
+	fill: #eab009;
+}
+
+.area2 {
+	fill: #ecbdca;
+	stroke: #fe3366;
+	stroke-width: 0.2em;
+}
+
+.stacked-area {
+	opacity: 0.5;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: white;
+	shape-rendering: crispEdges;
 }
 
 .axis text {
-    fill: white;
-    font-family: sans-serif;
-    font-size: 10px;
+	fill: white;
+	font-family: sans-serif;
+	font-size: 10px;
 }
 .overlay {
-    fill: none;
-    pointer-events: all;
+	fill: none;
+	pointer-events: all;
 }
 
 .focus circle {
-    fill: red;
+	fill: #eab009;
 }
 
-.focus text{
-    font-size: 14px;
-    color: white;
+.focus text {
+	font-size: 14px;
+	fill: white;
 }
-
-
 .tooltip-date {
-    fill: white;
-    font-weight: bold;
+	font-weight: bold;
 }
+
+/* donut chart tooltip */
+.donut-tooltip {
+	border-radius: 20px;
+}
+
+.donut-tooltip-text {
+	fill: #eab009;
+	font-weight: bold;
+}
+svg {
+	width:100%}
